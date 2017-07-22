@@ -19,3 +19,6 @@
 .idea
 ASCII Art Text Generator.iml
 
+# Files for testing
+input
+out

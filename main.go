@@ -8,10 +8,12 @@ import (
 	"os"
 	"bufio"
 	"strings"
+	"github.com/jroimartin/gocui"
 )
 
 var (
-	text       = flag.String("t", "Hello, World!", "Specify custom text")
+	text       = flag.String("t", "", "Specify custom text")
+	inputFile  = flag.String("i", "", "Input file")
 	pipedInput = flag.Bool("p", false, "Read from stdin instead")
 )
 
@@ -25,13 +27,35 @@ const (
 func main() {
 	flag.Parse()
 
-	if *pipedInput {
+	switch {
+	case *pipedInput:
 		in := bufio.NewReader(os.Stdin)
 		text, _ := in.ReadString(0x3)
 		generateASCIIArt(os.Stdout, text)
-	} else {
+
+	case *inputFile != "":
+		file, err := os.Open(*inputFile)
+		if err != nil {
+			panic(err)
+		}
+		r := bufio.NewReader(file)
+		text, err := r.ReadString(0x3)
+		if err != io.EOF {
+			panic(err)
+		}
+		generateASCIIArt(os.Stdout, text)
+
+	case *text != "":
 		generateASCIIArt(os.Stdout, *text)
+
+	default:
+		gui, err := gocui.NewGui(gocui.OutputNormal)
+		if err != nil {
+			panic(err)
+		}
+		gui.Close()
 	}
+
 }
 
 func generateASCIIArt(w io.Writer, text string) {
