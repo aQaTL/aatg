@@ -9,12 +9,14 @@ import (
 	"bufio"
 	"strings"
 	"github.com/jroimartin/gocui"
+	"unicode/utf8"
 )
 
 var (
 	text       = flag.String("t", "", "Specify custom text")
 	inputFile  = flag.String("i", "", "Input file")
-	pipedInput = flag.Bool("p", false, "Read from stdin instead")
+	pipedInput = flag.Bool("p", false, "Read from stdin")
+	glyph = flag.String("c", "\u2588", "Custom ascii character")
 )
 
 var glyphs []uint8 = basicfont.Face7x13.Mask.(*image.Alpha).Pix
@@ -26,12 +28,13 @@ const (
 
 func main() {
 	flag.Parse()
+	glyph, _ := utf8.DecodeRuneInString(*glyph)
 
 	switch {
 	case *pipedInput:
 		in := bufio.NewReader(os.Stdin)
 		text, _ := in.ReadString(0x3)
-		generateASCIIArt(os.Stdout, text)
+		generateASCIIArt(os.Stdout, text, glyph)
 
 	case *inputFile != "":
 		file, err := os.Open(*inputFile)
@@ -43,10 +46,10 @@ func main() {
 		if err != io.EOF {
 			panic(err)
 		}
-		generateASCIIArt(os.Stdout, text)
+		generateASCIIArt(os.Stdout, text, glyph)
 
 	case *text != "":
-		generateASCIIArt(os.Stdout, *text)
+		generateASCIIArt(os.Stdout, *text, glyph)
 
 	default:
 		gui, err := gocui.NewGui(gocui.OutputNormal)
@@ -58,7 +61,7 @@ func main() {
 
 }
 
-func generateASCIIArt(w io.Writer, text string) {
+func generateASCIIArt(w io.Writer, text string, glyph rune) {
 	buffer := bufio.NewWriter(w)
 	for _, text := range strings.Split(text, "\n") {
 		for row := 0; row < glyphH; row++ {
@@ -72,7 +75,7 @@ func generateASCIIArt(w io.Writer, text string) {
 					if dot == 0x00 {
 						buffer.WriteRune(' ')
 					} else if dot == 0xff {
-						buffer.WriteRune('\u2588')
+						buffer.WriteRune(glyph)
 					}
 				}
 				buffer.WriteRune(' ')
