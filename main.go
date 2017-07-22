@@ -15,10 +15,11 @@ var (
 	pipedInput = flag.Bool("p", false, "Read from stdin instead")
 )
 
-var (
-	glyphs []uint8 = basicfont.Face7x13.Mask.(*image.Alpha).Pix
-	glyphW         = 6
-	glyphH         = 13
+var glyphs []uint8 = basicfont.Face7x13.Mask.(*image.Alpha).Pix
+
+const (
+	glyphW = 6
+	glyphH = 13
 )
 
 func main() {
