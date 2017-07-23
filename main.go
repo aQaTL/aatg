@@ -8,7 +8,6 @@ import (
 	"os"
 	"bufio"
 	"strings"
-	"github.com/jroimartin/gocui"
 	"unicode/utf8"
 )
 
@@ -52,11 +51,7 @@ func main() {
 		generateASCIIArt(os.Stdout, *text, glyph)
 
 	default:
-		gui, err := gocui.NewGui(gocui.OutputNormal)
-		if err != nil {
-			panic(err)
-		}
-		gui.Close()
+		startGui()
 	}
 
 }
