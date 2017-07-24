@@ -40,8 +40,8 @@ You can use `-c` parameter combined with any other. Other parameters don't work 
 
 ## Interactive mode
 
-<script type="text/javascript" src="https://asciinema.org/a/2ALkXusauFvJ4UXT33IRzipzx.js" id="asciicast-2ALkXusauFvJ4UXT33IRzipzx" async></script>
+[![asciicast](https://asciinema.org/a/2ALkXusauFvJ4UXT33IRzipzx.png)](https://asciinema.org/a/2ALkXusauFvJ4UXT33IRzipzx)
 
 # Other modes
 
-<script type="text/javascript" src="https://asciinema.org/a/X5PItTdvrbbgeEH1w3HmV6uOU.js" id="asciicast-X5PItTdvrbbgeEH1w3HmV6uOU" async></script>
+[![asciicast](https://asciinema.org/a/X5PItTdvrbbgeEH1w3HmV6uOU.png)](https://asciinema.org/a/X5PItTdvrbbgeEH1w3HmV6uOU)
