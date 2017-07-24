@@ -4,6 +4,7 @@ import (
 	. "github.com/jroimartin/gocui"
 	"unicode/utf8"
 	"fmt"
+	"github.com/aqatl/Trego/ui/dialog"
 )
 
 type UIManager struct {
@@ -18,8 +19,9 @@ func startGui() {
 	}
 
 	glyph, _ := utf8.DecodeRuneInString(*glyph)
-	gui.SetManager(&UIManager{glyph: glyph})
-	SetKeyBindings(gui)
+	mngr := &UIManager{glyph: glyph}
+	gui.SetManager(mngr)
+	SetKeyBindings(gui, mngr)
 
 	gui.Cursor = true
 	gui.Mouse = false
@@ -66,7 +68,7 @@ func (mngr *UIManager) Layout(gui *Gui) error {
 	}
 
 	//Shortcuts view
-	if view, err := gui.SetView("shortcuts", w * 2/3, 0, w-1, 4); err != nil {
+	if view, err := gui.SetView("shortcuts", w*2/3, 0, w-1, 4); err != nil {
 		if err != ErrUnknownView {
 			return err
 		}
@@ -87,8 +89,46 @@ func (mngr *UIManager) InputViewEditor(v *View, key Key, ch rune, mod Modifier) 
 	generateASCIIArt(mngr.outputView, mngr.inputView.Buffer(), mngr.glyph)
 }
 
-func SetKeyBindings(gui *Gui) {
+func SetKeyBindings(gui *Gui, mngr *UIManager) {
 	gui.SetKeybinding("", KeyCtrlC, ModNone, func(gui *Gui, view *View) error {
 		return ErrQuit
+	})
+
+	gui.SetKeybinding("", KeyCtrlR, ModNone, func(gui *Gui, view *View) error {
+		input := make(chan string)
+
+		dialogViews := dialog.InputDialog(
+			"Type new character to use (^Q to cancel)",
+			"Change character",
+			"",
+			gui,
+			input,
+		)
+
+		gui.SetCurrentView(dialogViews[0].Name())
+		gui.SetViewOnTop(dialogViews[0].Name())
+
+		go func(input chan string, gui *Gui, mngr *UIManager) {
+			text := <-input
+			newGlyph, _ := utf8.DecodeRuneInString(text)
+			mngr.glyph = newGlyph
+
+			gui.Execute(func(gui *Gui) error {
+				if _, err := gui.SetCurrentView(mngr.inputView.Name()); err != nil {
+					return err
+				}
+				for _, v := range dialogViews {
+					gui.DeleteKeybindings(v.Name())
+					if err := gui.DeleteView(v.Name()); err != nil {
+						return err
+					}
+				}
+				mngr.outputView.Clear()
+				generateASCIIArt(mngr.outputView, mngr.inputView.Buffer(), mngr.glyph)
+				return nil
+			})
+		}(input, gui, mngr)
+
+		return nil
 	})
 }
