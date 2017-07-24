@@ -66,7 +66,7 @@ func (mngr *UIManager) Layout(gui *Gui) error {
 	}
 
 	//Shortcuts view
-	if view, err := gui.SetView("shortucts", w * 2/3, 0, w-1, 4); err != nil {
+	if view, err := gui.SetView("shortcuts", w * 2/3, 0, w-1, 4); err != nil {
 		if err != ErrUnknownView {
 			return err
 		}
