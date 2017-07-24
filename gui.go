@@ -3,6 +3,7 @@ package main
 import (
 	. "github.com/jroimartin/gocui"
 	"unicode/utf8"
+	"fmt"
 )
 
 type UIManager struct {
@@ -34,7 +35,7 @@ func (mngr *UIManager) Layout(gui *Gui) error {
 	w, h := gui.Size()
 
 	//Input view
-	if view, err := gui.SetView("input", 0, 0, w-1, 4); err != nil {
+	if view, err := gui.SetView("input", 0, 0, w*2/3-1, 4); err != nil {
 		if err != ErrUnknownView {
 			return err
 		}
@@ -62,6 +63,18 @@ func (mngr *UIManager) Layout(gui *Gui) error {
 		view.Wrap = false
 
 		mngr.outputView = view
+	}
+
+	//Shortcuts view
+	if view, err := gui.SetView("shortucts", w * 2/3, 0, w-1, 4); err != nil {
+		if err != ErrUnknownView {
+			return err
+		}
+
+		view.Title = "Shortcuts"
+		view.Editable = false
+
+		fmt.Fprintln(view, "^C exit\n^R change glyph")
 	}
 
 	return nil
