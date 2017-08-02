@@ -58,6 +58,9 @@ func main() {
 
 func generateASCIIArt(w io.Writer, text string, glyph rune) {
 	buffer := bufio.NewWriter(w)
+	if r, rSize := utf8.DecodeLastRuneInString(text); r == '\n' {
+		text = text[:len(text)-rSize] //Prevents drawing empty line at the end
+	}
 	for _, text := range strings.Split(text, "\n") {
 		for row := 0; row < glyphH; row++ {
 			for _, r := range text {
