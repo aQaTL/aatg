@@ -1,10 +1,10 @@
 package main
 
 import (
-	. "github.com/jroimartin/gocui"
-	"unicode/utf8"
 	"fmt"
 	"github.com/aqatl/Trego/ui/dialog"
+	. "github.com/jroimartin/gocui"
+	"unicode/utf8"
 )
 
 type UIManager struct {
@@ -109,9 +109,11 @@ func SetKeyBindings(gui *Gui, mngr *UIManager) {
 		gui.SetViewOnTop(dialogViews[0].Name())
 
 		go func(input chan string, gui *Gui, mngr *UIManager) {
-			text := <-input
-			newGlyph, _ := utf8.DecodeRuneInString(text)
-			mngr.glyph = newGlyph
+			text, ok := <-input
+			if ok {
+				newGlyph, _ := utf8.DecodeRuneInString(text)
+				mngr.glyph = newGlyph
+			}
 
 			gui.Execute(func(gui *Gui) error {
 				if _, err := gui.SetCurrentView(mngr.inputView.Name()); err != nil {
