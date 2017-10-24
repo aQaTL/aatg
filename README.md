@@ -1,19 +1,19 @@
-# ASCII Art Text Generator
+# aatg - ASCII Art Text Generator
 
 A console app for generating ASCII art from normal text. 
 
 ## Downloading
 
-To get the app go to the [Releases](https://github.com/aQaTL/ASCII-Art-Text-Generator/releases) 
+To get the app go to the [Releases](https://github.com/aQaTL/aatg/releases) 
 page and download the latest version. Then, unpack the archive and enjoy!.
 
 The other way is to download the repo by the `go get` tool and compile it by yourself. 
 You'll need a [Go](https://golang.org/) language installed and configured (set GOPATH). 
 
 ```
-go get github.com/aQaTL/ASCII-Art-Text-Generator
+go get github.com/aQaTL/aatg
 cd $GOPATH
-go install github.com/aQaTL/ASCII-Art-Text-Generator
+go install github.com/aQaTL/aatg
 ```
 
 ## Running the app
@@ -25,7 +25,7 @@ But you don't have to enter the interactive mode it you, for example, have a pre
 saved. To see other options, launch the app with a `--help` parameter: 
 
 ```
-> ASCII\ Art\ Text\ Generator --help
+> aatg --help
 Usage of ASCII Art Text Generator:
   -c string
         Custom ascii character (default "█")
