@@ -115,7 +115,7 @@ func SetKeyBindings(gui *Gui, mngr *UIManager) {
 				mngr.glyph = newGlyph
 			}
 
-			gui.Execute(func(gui *Gui) error {
+			gui.Update(func(gui *Gui) error {
 				if _, err := gui.SetCurrentView(mngr.inputView.Name()); err != nil {
 					return err
 				}
